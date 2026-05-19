@@ -1,33 +1,48 @@
 "use client";
+import { useMemo } from "react";
 
 import { useRouter } from "next/navigation";
 import ThemeSwitch from "../Themes/ThemeSwitcher";
+function debounce(fn: (value: string) => void, delay = 300) {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
-function debounce<T extends (...args: Any[]) => Any>(fn: T, delay = 300) {
-  let timeoutId: Any;
-  return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn.apply(this, args), delay);
+  return (value: string) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => {
+      fn(value);
+    }, delay);
   };
 }
 
 export function TopMenu({ query }: { query?: string }) {
   const router = useRouter();
 
-  const handleSearch = debounce(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const search = event.target.value;
-      router.push(`/search?q=${search}`);
-    },
-  );
-
-  // TODO: create and hook the search input to the handleSearch function
-  //       make sure you are able to explain what the handleSearch is doing and what debounce does
+  // useMemo keeps one debounced function instance during rerenders.
+  const handleSearch = useMemo(() => {
+    return debounce((searchText: string) => {
+      router.push(`/search?q=${encodeURIComponent(searchText)}`);
+    });
+  }, [router]);
 
   return (
-    <div>
-      <form action="#" method="GET" className="grid flex-1 grid-cols-1">
-        <input />
+    <div className="mb-4 flex flex-col items-start justify-between gap-3 border-b border-gray-200 pb-4 md:flex-row md:items-center dark:border-gray-700">
+      <form
+        action="#"
+        method="GET"
+        className="grid flex-1 grid-cols-1"
+        onSubmit={(event) => event.preventDefault()}
+      >
+        <input
+          type="search"
+          name="q"
+          placeholder="Search"
+          defaultValue={query ?? ""}
+          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-primary dark:border-gray-700 dark:bg-gray-800"
+          onChange={(event) => handleSearch(event.target.value)}
+        />
       </form>
       <div className="flex items-center gap-x-6">
         <ThemeSwitch />

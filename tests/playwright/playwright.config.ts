@@ -109,21 +109,33 @@ export default defineConfig({
     // },
   ],
 
-  /* Run your local dev server before starting the tests */
+  /* Run local servers automatically so tests don't depend on manual "turbo dev". */
   webServer: process.env.CI
     ? [
         {
           reuseExistingServer: true,
           command: "pnpm start:admin",
           url: "http://localhost:3002",
-          // reuseExistingServer: !process.env.CI,
         },
         {
           reuseExistingServer: true,
           command: "pnpm start:web",
           url: "http://localhost:3001",
-          // reuseExistingServer: !process.env.CI,
         },
       ]
-    : undefined,
+    : [
+        {
+          // In local development we run the Next dev server directly.
+          reuseExistingServer: true,
+          command: "pnpm --filter @repo/admin dev",
+          url: "http://localhost:3002",
+          timeout: 120 * 1000,
+        },
+        {
+          reuseExistingServer: true,
+          command: "pnpm --filter @repo/web dev",
+          url: "http://localhost:3001",
+          timeout: 120 * 1000,
+        },
+      ],
 });
