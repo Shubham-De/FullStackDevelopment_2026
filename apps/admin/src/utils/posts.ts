@@ -1,25 +1,15 @@
-import { type Post, posts } from "@repo/db/data";
-import { toUrlPath } from "@repo/utils/url";
+import type { Post } from "@repo/db/data";
+import {
+  createPostInDb,
+  getAllPostsFromDb,
+  getPostByUrlId,
+  togglePostActiveInDb,
+  updatePostInDb,
+  type EditablePostInput as DbEditablePostInput,
+} from "@repo/db/posts";
 
 export type AdminPost = Omit<Post, "date"> & { date: string };
-
-export type EditablePostInput = {
-  title: string;
-  category: string;
-  description: string;
-  content: string;
-  imageUrl: string;
-  tags: string;
-  active?: boolean;
-};
-
-function normalizeTags(tags: string) {
-  return tags
-    .split(",")
-    .map((tag) => tag.trim())
-    .filter((tag) => tag.length > 0)
-    .join(",");
-}
+export type EditablePostInput = DbEditablePostInput;
 
 function toAdminPost(post: Post): AdminPost {
   return {
@@ -29,25 +19,13 @@ function toAdminPost(post: Post): AdminPost {
   };
 }
 
-function buildUniqueUrlId(title: string) {
-  const baseUrlId = toUrlPath(title) || "new-post";
-  let nextUrlId = baseUrlId;
-  let suffix = 2;
-
-  while (posts.some((post) => post.urlId === nextUrlId)) {
-    nextUrlId = `${baseUrlId}-${suffix}`;
-    suffix += 1;
-  }
-
-  return nextUrlId;
-}
-
-export function listPostsForAdmin() {
+export async function listPostsForAdmin() {
+  const posts = await getAllPostsFromDb();
   return posts.map((post) => toAdminPost(post));
 }
 
-export function findAdminPostByUrlId(urlId: string) {
-  const post = posts.find((item) => item.urlId === urlId);
+export async function findAdminPostByUrlId(urlId: string) {
+  const post = await getPostByUrlId(urlId);
   if (!post) {
     return null;
   }
@@ -55,53 +33,25 @@ export function findAdminPostByUrlId(urlId: string) {
   return toAdminPost(post);
 }
 
-export function createPost(input: EditablePostInput) {
-  const nextId = posts.reduce((maxId, post) => Math.max(maxId, post.id), 0) + 1;
-  const urlId = buildUniqueUrlId(input.title);
-
-  const newPost: Post = {
-    id: nextId,
-    urlId,
-    title: input.title.trim(),
-    category: input.category.trim() || "General",
-    description: input.description.trim(),
-    content: input.content,
-    imageUrl: input.imageUrl.trim(),
-    tags: normalizeTags(input.tags),
-    active: input.active ?? true,
-    date: new Date(),
-    likes: 0,
-    views: 0,
-  };
-
-  // Add to the top so latest post appears first in date-desc sort.
-  posts.unshift(newPost);
-  return toAdminPost(newPost);
+export async function createPost(input: EditablePostInput) {
+  const post = await createPostInDb(input);
+  return toAdminPost(post);
 }
 
-export function updatePost(urlId: string, input: EditablePostInput) {
-  const post = posts.find((item) => item.urlId === urlId);
+export async function updatePost(urlId: string, input: EditablePostInput) {
+  const post = await updatePostInDb(urlId, input);
   if (!post) {
     return null;
   }
-
-  post.title = input.title.trim();
-  post.category = input.category.trim() || post.category;
-  post.description = input.description.trim();
-  post.content = input.content;
-  post.imageUrl = input.imageUrl.trim();
-  post.tags = normalizeTags(input.tags);
-  post.active = input.active ?? post.active;
 
   return toAdminPost(post);
 }
 
-export function togglePostActive(urlId: string) {
-  const post = posts.find((item) => item.urlId === urlId);
+export async function togglePostActive(urlId: string) {
+  const post = await togglePostActiveInDb(urlId);
   if (!post) {
     return null;
   }
 
-  post.active = !post.active;
   return toAdminPost(post);
 }

@@ -15,7 +15,7 @@ export default async function Page({
     return <LoginScreen redirectTo={`/post/${urlId}`} />;
   }
 
-  const post = findAdminPostByUrlId(urlId);
+  const post = await findAdminPostByUrlId(urlId);
   if (!post) {
     return <main className="mx-auto max-w-3xl p-6">Post not found</main>;
   }

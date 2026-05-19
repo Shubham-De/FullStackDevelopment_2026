@@ -27,7 +27,13 @@
     },
     "./seed": {
       "types": "./src/seed.ts",
+      "require": "./src/seed.cjs",
+      "import": "./dist/seed.js",
       "default": "./dist/seed.js"
+    },
+    "./posts": {
+      "types": "./src/posts.ts",
+      "default": "./dist/posts.js"
     }
   },
   "dependencies": {

@@ -11,7 +11,7 @@ export async function PATCH(
   }
 
   const { urlId } = await context.params;
-  const post = togglePostActive(urlId);
+  const post = await togglePostActive(urlId);
   if (!post) {
     return NextResponse.json({ message: "Post not found" }, { status: 404 });
   }

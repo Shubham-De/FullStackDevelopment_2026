@@ -1,9 +1,9 @@
-import { posts } from "@repo/db/data";
+import { getActivePostsFromDb } from "@repo/db/posts";
 import { CategoryList } from "./CategoryList";
 import { HistoryList } from "./HistoryList";
 import { TagList } from "./TagList";
 
-export function LeftMenu({
+export async function LeftMenu({
   selectedCategory,
   selectedTag,
   selectedYear,
@@ -14,6 +14,8 @@ export function LeftMenu({
   selectedYear?: string;
   selectedMonth?: string;
 }) {
+  const posts = await getActivePostsFromDb();
+
   return (
     <aside className="w-full border-r border-gray-200 p-6 md:w-72 dark:border-gray-700">
       <a href="/" className="mb-8 inline-block text-3xl font-bold text-primary">

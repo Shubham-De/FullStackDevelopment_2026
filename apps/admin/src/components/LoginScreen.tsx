@@ -1,4 +1,3 @@
-import { loginAction } from "../app/actions/auth";
 
 export function LoginScreen({
   redirectTo = "/",
@@ -14,7 +13,7 @@ export function LoginScreen({
         Enter the assignment password to access admin features.
       </p>
 
-      <form action={loginAction} className="space-y-4">
+      <form action="/api/auth" method="POST" className="space-y-4">
         <input type="hidden" name="redirectTo" value={redirectTo} />
 
         <div>

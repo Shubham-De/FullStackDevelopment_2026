@@ -25,6 +25,10 @@ if (!fs.existsSync(authDir)) {
  */
 export default defineConfig({
   testDir: "./tests",
+  build: {
+    // Keep db package imports native so Playwright does not rewrite ESM files to CJS.
+    external: ["@repo/db", "@repo/db/*"],
+  },
   /* Run tests in files in parallel */
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

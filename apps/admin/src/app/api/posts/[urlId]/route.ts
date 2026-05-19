@@ -21,7 +21,7 @@ export async function PUT(
     active?: boolean;
   };
 
-  const post = updatePost(urlId, input);
+  const post = await updatePost(urlId, input);
   if (!post) {
     return NextResponse.json({ message: "Post not found" }, { status: 404 });
   }

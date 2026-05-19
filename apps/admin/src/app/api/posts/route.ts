@@ -17,6 +17,6 @@ export async function POST(request: Request) {
     active?: boolean;
   };
 
-  const post = createPost(input);
+  const post = await createPost(input);
   return NextResponse.json({ post }, { status: 201 });
 }

@@ -1,6 +1,7 @@
 import { AppLayout } from "@/components/Layout/AppLayout";
 import { Main } from "@/components/Main";
-import { posts } from "@repo/db/data";
+import { getActivePostsFromDb } from "@repo/db/posts";
+export const dynamic = "force-dynamic";
 
 export default async function Page({
   searchParams,
@@ -9,11 +10,9 @@ export default async function Page({
 }) {
   const { q } = await searchParams;
   const searchText = (q ?? "").trim().toLowerCase();
+  const posts = await getActivePostsFromDb();
 
   const matchedPosts = posts.filter((post) => {
-    if (!post.active) {
-      return false;
-    }
 
     if (!searchText) {
       return true;

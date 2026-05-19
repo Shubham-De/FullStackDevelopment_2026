@@ -1,5 +1,6 @@
 import type { Post } from "@repo/db/data";
 import { marked } from "marked";
+import { LikeButton } from "./LikeButton";
 function formatPostDate(date: Date) {
   return date.toLocaleDateString("en-GB", {
     day: "2-digit",
@@ -46,7 +47,7 @@ export async function BlogDetail({ post }: { post: Post }) {
 
       <div className="flex items-center gap-6 border-y border-gray-200 py-3 text-sm text-secondary dark:border-gray-700">
         <span>{post.views} views</span>
-        <span>{post.likes} likes</span>
+        <LikeButton postId={post.id} urlId={post.urlId} initialLikes={post.likes} />
       </div>
 
       {/* Content is stored as markdown, so we render parsed HTML here. */}

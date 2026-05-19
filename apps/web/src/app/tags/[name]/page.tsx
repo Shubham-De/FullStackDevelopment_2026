@@ -1,7 +1,8 @@
 import { AppLayout } from "@/components/Layout/AppLayout";
 import { Main } from "@/components/Main";
-import { posts } from "@repo/db/data";
+import { getActivePostsFromDb } from "@repo/db/posts";
 import { toUrlPath } from "@repo/utils/url";
+export const dynamic = "force-dynamic";
 
 export default async function Page({
   params,
@@ -9,11 +10,9 @@ export default async function Page({
   params: Promise<{ name: string }>;
 }) {
   const { name } = await params;
+  const posts = await getActivePostsFromDb();
 
   const tagPosts = posts.filter((post) => {
-    if (!post.active) {
-      return false;
-    }
 
     const postTags = post.tags
       .split(",")
