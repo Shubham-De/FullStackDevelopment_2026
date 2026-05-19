@@ -1,34 +1,18 @@
+import { type Post, posts } from "./data.js";
+
+function clonePost(post: Post): Post {
+  return {
+    ...post,
+    date: new Date(post.date),
+  };
+}
+
+// Snapshot the original array once so seed() can restore it any time.
+const initialPosts = posts.map((post) => clonePost(post));
+
 export async function seed() {
-  // TODO: Uncomment below once you set up Prisma and loaded data to your database
-  // console.log("🌱 Seeding data");
-  // await client.db.like.deleteMany();
-  // await client.db.post.deleteMany();
-  // for (const post of posts) {
-  //   await client.db.post.create({
-  //     data: {
-  //       title: post.title,
-  //       content: post.content,
-  //       category: post.category,
-  //       description: post.description,
-  //       imageUrl: post.imageUrl,
-  //       tags: post.tags
-  //         .split(",")
-  //         .map((p) => p.trim())
-  //         .join(","),
-  //       urlId: post.urlId,
-  //       active: post.active,
-  //       date: post.date,
-  //       id: post.id,
-  //       views: post.views,
-  //     },
-  //   });
-  //   for (let i = 0; i < post.likes; i++) {
-  //     await client.db.like.create({
-  //       data: {
-  //         postId: post.id,
-  //         userIP: `192.168.100.${i}`,
-  //       },
-  //     });
-  //   }
-  // }
+  posts.length = 0;
+  for (const post of initialPosts) {
+    posts.push(clonePost(post));
+  }
 }
