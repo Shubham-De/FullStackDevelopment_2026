@@ -25,9 +25,11 @@ export async function isLoggedIn() {
 export async function setAuthCookie() {
 
   const userCookies = await cookies();
-  const token = jwt.sign({ role: "admin" }, env.JWT_SECRET || "", {
+  const token = jwt.sign({ role: "admin" }, env.JWT_SECRET || "", {   //signs jwt token with an expiry date of 7days
     expiresIn: TOKEN_EXPIRATION,
   });
+
+  // Stores it in an httpOnly cookie (js can't read it. only server can
 
   userCookies.set(AUTH_COOKIE_NAME, token, {
     httpOnly: true,

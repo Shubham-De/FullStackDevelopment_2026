@@ -34,6 +34,10 @@
     "./posts": {
       "types": "./src/posts.ts",
       "default": "./dist/posts.js"
+    },
+    "./comments": {
+      "types": "./src/comments.ts",
+      "default": "./dist/comments.js"
     }
   },
   "dependencies": {

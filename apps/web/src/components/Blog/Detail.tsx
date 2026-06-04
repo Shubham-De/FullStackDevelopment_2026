@@ -1,5 +1,6 @@
 import type { Post } from "@repo/db/data";
 import { marked } from "marked";
+import { CommentSection } from "../Comments/CommentSection";
 import { LikeButton } from "./LikeButton";
 function formatPostDate(date: Date) {
   return date.toLocaleDateString("en-GB", {
@@ -56,6 +57,9 @@ export async function BlogDetail({ post }: { post: Post }) {
         className="prose prose-slate max-w-none dark:prose-invert"
         dangerouslySetInnerHTML={{ __html: content }}
       />
+
+      {/* Comment section - allows users to leave comments and replies */}
+      <CommentSection postId={post.id} />
     </article>
   );
 }

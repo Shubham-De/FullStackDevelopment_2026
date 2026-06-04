@@ -2,7 +2,8 @@ import { env } from "@repo/env/admin";
 import { NextResponse } from "next/server";
 import { setAuthCookie, signOut } from "../../../utils/auth";
 
-function isJsonRequest(request: Request) {
+ //Checks if the request is sending JSON or a form
+function isJsonRequest(request: Request) {                   
   const contentType = request.headers.get("content-type") || "";
   return contentType.includes("application/json");
 }

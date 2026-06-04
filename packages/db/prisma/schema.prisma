@@ -11,18 +11,19 @@ datasource db {
 }
 
 model Post {
-  id          Int      @id @default(autoincrement())
-  urlId       String   @unique
+  id          Int       @id @default(autoincrement())
+  urlId       String    @unique
   title       String
   content     String
   description String
   imageUrl    String
-  date        DateTime @default(now())
+  date        DateTime  @default(now())
   category    String
   tags        String
-  views       Int      @default(0)
-  active      Boolean  @default(true)
+  views       Int       @default(0)
+  active      Boolean   @default(true)
   Likes       Like[]
+  Comments    Comment[]
 }
 
 model Like {
@@ -31,4 +32,17 @@ model Like {
   Post   Post   @relation(fields: [postId], references: [id])
 
   @@id([postId, userIP])
+}
+
+// Comment model - supports nested replies via parentId
+model Comment {
+  id        Int       @id @default(autoincrement())
+  postId    Int
+  parentId  Int?
+  author    String
+  content   String
+  createdAt DateTime  @default(now())
+  Post      Post      @relation(fields: [postId], references: [id])
+  Parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  Children  Comment[] @relation("CommentReplies")
 }

@@ -9,7 +9,7 @@ const POSTS_PER_PAGE = 3;
 
 export function BlogList({ posts }: { posts: Post[] }) {
   // currentPage starts at 1
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);     //tracks which page we're on Starts at page 1
 
   if (posts.length === 0) {
     return (
@@ -20,7 +20,7 @@ export function BlogList({ posts }: { posts: Post[] }) {
   }
 
   // Calculate total number of pages
-  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);                                                         //If there are 7 posts and 3 per page 7 / 3 = 2.33, it rounds up to 3 pages
 
   // Get only the posts for the current page
   const startIndex = (currentPage - 1) * POSTS_PER_PAGE;

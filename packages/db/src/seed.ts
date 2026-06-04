@@ -2,6 +2,8 @@ import { client } from "./client.js";
 import { posts } from "./data.js";
 
 export async function seed() {
+  // Delete comments first (they depend on posts)
+  await client.db.comment.deleteMany();
   await client.db.like.deleteMany();
   await client.db.post.deleteMany();
 
