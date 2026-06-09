@@ -1,7 +1,7 @@
 import { expect, test } from "./fixtures";
 
 test.describe("DETAIL SCREEN", () => {
-  test.beforeAll(async () => {
+  test.beforeEach(async () => {
     await fetch("http://localhost:3001/api/seed");
   });
 

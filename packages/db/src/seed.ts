@@ -42,4 +42,6 @@ export async function seed() {
       }
     }
   });
+  await client.db.$disconnect();
+  //global.prisma = undefined;
 }
