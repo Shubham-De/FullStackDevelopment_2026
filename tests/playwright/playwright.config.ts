@@ -129,7 +129,7 @@ export default defineConfig({
         },
         {
           reuseExistingServer: true,
-          command: "pnpm --filter @repo/web start",
+          command: "pnpm --filter @repo/admin start:e2e",
           url: "http://localhost:3001",
         },
       ]
