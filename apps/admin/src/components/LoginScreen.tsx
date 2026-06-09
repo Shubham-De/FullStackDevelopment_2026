@@ -10,7 +10,7 @@ export function LoginScreen({
     <main className="mx-auto mt-20 w-full max-w-md rounded-xl border border-gray-200 p-6 dark:border-gray-700">
       <h1 className="mb-2 text-2xl font-bold text-primary">Sign in to your account</h1>
       <p className="mb-6 text-sm text-secondary">
-        Enter the assignment password to access admin features.
+        Enter the password to access admin features.
       </p>
 
       <form action="/api/auth" method="POST" className="space-y-4">
