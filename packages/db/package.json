@@ -41,7 +41,6 @@
     }
   },
   "dependencies": {
-    "@prisma/adapter-libsql": "^7.8.0",
     "@repo/env": "workspace:*"
   },
   "devDependencies": {
