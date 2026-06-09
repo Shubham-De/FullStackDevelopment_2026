@@ -60,24 +60,30 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    { name: "setup", testMatch: /.*\.setup\.ts/ },
     {
-      name: "chromium",
+      name: "setup",
+      testMatch: /.*\.setup\.ts/,
+      use: { baseURL: "http://localhost:3002" },
+    },
+    {
+      name: "admin-chromium",
       testDir: "./tests/admin",
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "http://localhost:3002",
+        storageState: ".auth/user.json",
       },
-      dependencies: process.env.CI ? ["setup"] : [],
+      dependencies: ["setup"],
     },
     {
-      name: "chromium",
+      name: "web-chromium",
       testDir: "./tests/web",
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "http://localhost:3001",
+        storageState: ".auth/user.json",
       },
-      dependencies: process.env.CI ? ["setup"] : [],
+      dependencies: ["setup"],
     },
 
     // {

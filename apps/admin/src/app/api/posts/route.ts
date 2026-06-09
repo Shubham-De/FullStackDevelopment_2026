@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Unauthorised" }, { status: 401 });
   }
 
-  const input = (await request.json()) as {
+  let input: {
     title: string;
     category: string;
     description: string;
@@ -16,6 +16,12 @@ export async function POST(request: Request) {
     tags: string;
     active?: boolean;
   };
+
+  try {
+    input = await request.json();
+  } catch {
+    return NextResponse.json({ message: "Invalid request body" }, { status: 400 });
+  }
 
   const post = await createPost(input);
   return NextResponse.json({ post }, { status: 201 });

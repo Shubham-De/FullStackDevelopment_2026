@@ -1,8 +1,7 @@
-import { seed } from "@repo/db/seed";
 import { expect, test } from "./fixtures";
 
 test.beforeAll(async () => {
-  await seed();
+  await fetch("http://localhost:3001/api/seed");
 });
 
 test.describe("ADMIN HOME SCREEN", () => {
@@ -11,7 +10,8 @@ test.describe("ADMIN HOME SCREEN", () => {
     {
       tag: "@a2",
     },
-    async ({ page }) => {
+    async ({ page, context }) => {
+      await context.clearCookies();
       await page.goto("/");
       await expect(page.getByText("Sign In", { exact: true })).toBeVisible();
 
@@ -27,7 +27,8 @@ test.describe("ADMIN HOME SCREEN", () => {
     {
       tag: "@a2",
     },
-    async ({ page }) => {
+    async ({ page, context }) => {
+      await context.clearCookies();
       await page.goto("/");
 
       // HOME SCREEN > Authenticate the current client using a hard-coded password

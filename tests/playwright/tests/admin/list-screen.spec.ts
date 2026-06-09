@@ -1,13 +1,12 @@
-import { seed } from "@repo/db/seed";
 import { expect, test } from "./fixtures";
 
 test.beforeAll(async () => {
-  await seed();
+  await fetch("http://localhost:3001/api/seed");
 });
 
 test.describe("ADMIN LIST SCREEN", () => {
   test.beforeAll(async () => {
-    await seed();
+    await fetch("http://localhost:3001/api/seed");
   });
 
   test(
@@ -256,7 +255,7 @@ test.describe("ADMIN LIST SCREEN", () => {
       tag: "@a3",
     },
     async ({ userPage }) => {
-      await seed();
+      await fetch("http://localhost:3001/api/seed");
       await userPage.goto("/");
 
       //  BACKEND / ADMIN / LIST SCREEN > Logged in user can activate / deactivate a post clicking on the activate button, automatically saving changes

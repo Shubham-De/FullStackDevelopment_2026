@@ -89,8 +89,7 @@ export function PostEditorForm({
   const [errorMessage, setErrorMessage] = useState("");
   const [saveMessage, setSaveMessage] = useState("");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadMessage, setUploadMessage] = useState("");
+  const [useRichEditor, setUseRichEditor] = useState(false);
 
   const contentInputRef = useRef<HTMLTextAreaElement | null>(null);
   const cursorPositionRef = useRef<{ start: number; end: number } | null>(null);
@@ -218,13 +217,22 @@ export function PostEditorForm({
           <label htmlFor="content" className="text-sm font-medium">
             Content
           </label>
-          <button
-            type="button"
-            onClick={togglePreview}
-            className="rounded-md border border-gray-300 px-3 py-1 text-sm dark:border-gray-700"
-          >
-            {isPreviewOpen ? "Close Preview" : "Preview"}
-          </button>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setUseRichEditor(!useRichEditor)}
+              className="rounded-md border border-gray-300 px-3 py-1 text-sm dark:border-gray-700"
+            >
+              {useRichEditor ? "Plain Editor" : "Rich Editor"}
+            </button>
+            <button
+              type="button"
+              onClick={togglePreview}
+              className="rounded-md border border-gray-300 px-3 py-1 text-sm dark:border-gray-700"
+            >
+              {isPreviewOpen ? "Close Preview" : "Preview"}
+            </button>
+          </div>
         </div>
 
         {isPreviewOpen ? (
@@ -233,11 +241,21 @@ export function PostEditorForm({
             className="prose max-w-none rounded-md border border-gray-300 p-3 dark:prose-invert dark:border-gray-700"
             dangerouslySetInnerHTML={{ __html: previewHtml }}
           />
-        ) : (
+        ) : useRichEditor ? (
           /* Rich text markdown editor - has toolbar for bold, italic, headings, etc. */
           <MarkdownEditor
             value={values.content}
             onChange={(newValue) => setFieldValue("content", newValue)}
+          />
+        ) : (
+          /* Plain textarea - default mode */
+          <textarea
+            id="content"
+            ref={contentInputRef}
+            value={values.content}
+            onChange={(event) => setFieldValue("content", event.target.value)}
+            rows={8}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
           />
         )}
 
@@ -256,56 +274,6 @@ export function PostEditorForm({
         />
         {errors.imageUrl ? <p className="mt-1 text-sm text-red-600">{errors.imageUrl}</p> : null}
 
-        {/* Image upload - pick a file from your computer */}
-        <div className="mt-3 flex items-center gap-3">
-          <label className="cursor-pointer rounded-md border border-gray-300 px-4 py-2 text-sm hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800">
-            {isUploading ? "Uploading..." : "Upload Image"}
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              disabled={isUploading}
-              onChange={async (event) => {
-                // Get the file the user picked
-                const file = event.target.files?.[0];
-                if (!file) return;
-
-                setIsUploading(true);
-                setUploadMessage("");
-
-                // Send the file to our upload API
-                const formData = new FormData();
-                formData.append("file", file);
-
-                try {
-                  const response = await fetch("/api/upload", {
-                    method: "POST",
-                    body: formData,
-                  });
-
-                  if (!response.ok) {
-                    setUploadMessage("Upload failed. Please try again.");
-                    return;
-                  }
-
-                  const data = (await response.json()) as { url: string };
-                  // Put the uploaded URL into the Image URL field
-                  setFieldValue("imageUrl", data.url);
-                  setUploadMessage("Image uploaded!");
-                } catch {
-                  setUploadMessage("Upload failed. Please try again.");
-                } finally {
-                  setIsUploading(false);
-                }
-              }}
-            />
-          </label>
-          {uploadMessage ? (
-            <span className="text-sm text-secondary">{uploadMessage}</span>
-          ) : null}
-        </div>
-
-        {/* Image preview */}
         <img
           data-test-id="image-preview"
           src={values.imageUrl}

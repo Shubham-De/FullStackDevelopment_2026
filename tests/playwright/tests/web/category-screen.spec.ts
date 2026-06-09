@@ -1,9 +1,8 @@
-import { seed } from "@repo/db/seed";
 import { expect, test } from "./fixtures";
 
 test.describe("CATEGORY SCREEN", () => {
   test.beforeAll(async () => {
-    await seed();
+    await fetch("http://localhost:3001/api/seed");
   });
 
   test(
@@ -13,8 +12,11 @@ test.describe("CATEGORY SCREEN", () => {
     },
     async ({ page }) => {
       await page.goto("/category/react");
+      //await page.waitForLoadState("domcontentloaded");
 
-      // CATEGORY SCREEN > Displays results based on category from url (e.g. /category/react)
+      //const content = await page.content();
+      //console.log("PAGE CONTENT LENGTH:", content.length);
+      //console.log("HAS BLOG POST:", content.includes("blog-post-"));
 
       const articles = await page.locator('[data-test-id^="blog-post-"]');
       await expect(articles).toHaveCount(2);
@@ -38,8 +40,6 @@ test.describe("CATEGORY SCREEN", () => {
     },
     async ({ page }) => {
       await page.goto("/category/abc");
-
-      // CATEGORY SCREEN > Displays "0 Posts" when search does not find anything
 
       const articles = await page.locator('[data-test-id^="blog-post-"]');
       await expect(articles).toHaveCount(0);

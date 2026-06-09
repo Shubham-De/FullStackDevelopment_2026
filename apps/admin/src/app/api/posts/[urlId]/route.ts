@@ -11,7 +11,8 @@ export async function PUT(
   }
 
   const { urlId } = await context.params;
-  const input = (await request.json()) as {
+
+  let input: {
     title: string;
     category: string;
     description: string;
@@ -20,6 +21,12 @@ export async function PUT(
     tags: string;
     active?: boolean;
   };
+
+  try {
+    input = await request.json();
+  } catch {
+    return NextResponse.json({ message: "Invalid request body" }, { status: 400 });
+  }
 
   const post = await updatePost(urlId, input);
   if (!post) {

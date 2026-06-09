@@ -1,8 +1,7 @@
-import { seed } from "@repo/db/seed";
 import { expect, test } from "./fixtures";
 
 test.beforeEach(async () => {
-  await seed();
+  await fetch("http://localhost:3001/api/seed");
 });
 
 test.describe("ADMIN UPDATE SCREEN", () => {
@@ -11,7 +10,8 @@ test.describe("ADMIN UPDATE SCREEN", () => {
     {
       tag: "@a2",
     },
-    async ({ page }) => {
+    async ({ page, context }) => {
+      await context.clearCookies();
       await page.goto("/post/no-front-end-framework-is-the-best");
 
       // UPDATE SCREEN > Shows login screen if not logged
@@ -125,7 +125,7 @@ test.describe("ADMIN UPDATE SCREEN", () => {
       tag: "@a3",
     },
     async ({ userPage }) => {
-      await seed();
+      await fetch("http://localhost:3001/api/seed");
       await userPage.goto("/post/no-front-end-framework-is-the-best");
 
       // BACKEND / ADMIN / UPDATE SCREEN > Logged in user can save changes to database, if the form is validated
@@ -162,7 +162,7 @@ test.describe("ADMIN UPDATE SCREEN", () => {
       tag: "@a3",
     },
     async ({ userPage }) => {
-      await seed();
+      await fetch("http://localhost:3001/api/seed");
       await userPage.goto("/posts/create");
 
       // BACKEND / ADMIN / UPDATE SCREEN > Logged in user can create a new post to the database, if the form is validated

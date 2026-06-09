@@ -1,8 +1,9 @@
-import { seed } from "@repo/db/seed";
 import { expect, test, type Page } from "./fixtures";
 
+// Seed the database via HTTP so we don't create a separate Prisma connection
+// (direct seed() calls lock SQLite against the dev server)
 test.beforeAll(async () => {
-  await seed();
+  await fetch("http://localhost:3001/api/seed");
 });
 
 test.describe("HOME SCREEN", () => {
