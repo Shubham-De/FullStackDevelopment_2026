@@ -38,8 +38,8 @@ export async function LeftMenu({
             <TagList selectedTag={selectedTag} posts={posts} />
           </li>
           <li>
-            <a href="http://localhost:3002" className="text-sm text-secondary">
-              Admin
+            <a href="https://full-stack-development-2026-admin.vercel.app" className="text-sm text-secondary">
+            Admin
             </a>
           </li>
         </ul>
