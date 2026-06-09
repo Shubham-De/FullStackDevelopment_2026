@@ -124,12 +124,12 @@ export default defineConfig({
     ? [
         {
           reuseExistingServer: true,
-          command: "pnpm start:admin",
+          command: "pnpm --filter @repo/admin start:e2e",
           url: "http://localhost:3002",
         },
         {
           reuseExistingServer: true,
-          command: "pnpm start:web",
+          command: "pnpm --filter @repo/web start",
           url: "http://localhost:3001",
         },
       ]
